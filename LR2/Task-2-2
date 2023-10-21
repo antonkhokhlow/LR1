@@ -1,0 +1,3 @@
+USE cd;
+SELECT * FROM facilities;
+SELECT facility,membercost FROM facilities;
