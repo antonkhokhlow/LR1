@@ -1,2 +1,0 @@
-USE cd;
-SELECT MAX(joindate) AS last_joindate FROM members;

@@ -1,4 +1,0 @@
-USE cd;
-SELECT facility, monthlymaintenance FROM facilities
-WHERE monthlymaintenance = (SELECT MAX(monthlymaintenance) FROM facilities)
-OR monthlymaintenance = (SELECT MIN(monthlymaintenance) FROM facilities);

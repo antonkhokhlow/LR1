@@ -1,3 +1,0 @@
-USE cd;
-SELECT firstname AS name FROM members WHERE firstname!='Guest' UNION 
-SELECT facility AS name FROM facilities;
