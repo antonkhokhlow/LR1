@@ -1,0 +1,12 @@
+/*Составьте список объектов вместе с их общим доходом. 
+Выходная таблица должна состоять из названия объекта и доходов, отсортированных по доходам. 
+Помните, что для гостей и участников действуют разные цены!*/
+USE cd;
+SELECT facilities.facility AS 'Название объекта', 
+       SUM(CASE WHEN members.memid = 0 THEN facilities.guestcost * bookings.slots
+                 ELSE facilities.membercost * bookings.slots END) AS income
+FROM bookings
+INNER JOIN facilities ON bookings.facid = facilities.facid
+INNER JOIN members ON bookings.memid = members.memid
+GROUP BY facilities.facility
+ORDER BY income DESC;
