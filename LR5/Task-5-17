@@ -1,0 +1,16 @@
+/*Классифицируйте объекты на группы одинакового размера 
+(высокие, средние и низкие в зависимости от их доходов). 
+Упорядочите по классификации и названию объекта.
+Примечание: используйте функцию деления на группы ntile.*/
+USE cd;
+SELECT facility, 
+CASE 
+  WHEN NTILE(3) OVER (ORDER BY income) = 1 THEN 'высокий'
+  WHEN NTILE(3) OVER (ORDER BY income) = 2 THEN 'средний'
+  ELSE 'низкий' 
+END AS income_classification
+FROM (
+  SELECT fac.facility, SUM(IF(book.memid = 0, fac.guestcost * book.slots, fac.membercost * book.slots)) AS income
+  FROM facilities fac INNER JOIN bookings book ON fac.facid = book.facid GROUP BY fac.facility
+) AS subquery
+ORDER BY income_classification, facility;

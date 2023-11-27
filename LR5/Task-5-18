@@ -1,0 +1,25 @@
+/*Для каждого дня августа 2012 года рассчитайте скользящее среднее общего дохода за предыдущие 15 дней. 
+Вывод должен содержать столбцы даты и дохода, отсортированные по дате. 
+Не забудьте учесть возможность того, что в день будет нулевой доход. 
+Примечание: используйте DATE_ADD для генерации серии дат.*/
+USE cd;
+WITH RECURSIVE series_date AS (
+    SELECT '2012-08-01' AS Augustdays
+    UNION ALL SELECT DATE_ADD(Augustdays, INTERVAL 1 DAY) 
+    FROM series_date WHERE Augustdays < '2012-08-31'
+),
+Full_income AS(SELECT series_date.Augustdays, IFNULL(SUM(
+		CASE 
+			WHEN(DATE(book.starttime) != Augustdays) THEN 0
+            WHEN (book.memid = 0) THEN fac.guestcost * book.slots
+            ELSE fac.membercost * book.slots
+        END), 0) AS income,
+	IFNULL(ROUND(SUM(IF(book.memid = 0, fac.guestcost, fac.membercost) * book.slots) / 15), 0) as скользящее_среднее_общего_дохода
+    FROM series_date
+    LEFT JOIN bookings AS book ON DATE_ADD(Augustdays, INTERVAL -14 day) <= DATE(book.starttime) AND DATE(book.starttime) <= Augustdays
+    LEFT JOIN facilities AS fac ON book.facid = fac.facid
+    LEFT JOIN members mem ON book.memid = mem.memid
+    GROUP BY Augustdays
+)
+SELECT * FROM Full_income
+ORDER BY Augustdays;
