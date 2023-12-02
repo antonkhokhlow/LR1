@@ -14,7 +14,7 @@ Full_income AS(SELECT series_date.Augustdays, IFNULL(SUM(
             WHEN (book.memid = 0) THEN fac.guestcost * book.slots
             ELSE fac.membercost * book.slots
         END), 0) AS income,
-	IFNULL(ROUND(SUM(IF(book.memid = 0, fac.guestcost, fac.membercost) * book.slots) / 15), 0) as скользящее_среднее_общего_дохода
+	IFNULL(SUM(IF(book.memid = 0, fac.guestcost, fac.membercost) * book.slots) / 15, 0) as скользящее_среднее_общего_дохода
     FROM series_date
     LEFT JOIN bookings AS book ON DATE_ADD(Augustdays, INTERVAL -14 day) <= DATE(book.starttime) AND DATE(book.starttime) <= Augustdays
     LEFT JOIN facilities AS fac ON book.facid = fac.facid
