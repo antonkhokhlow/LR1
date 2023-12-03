@@ -1,4 +1,4 @@
 /*Выберите количество аренд объектов клуба в каждый месяц.*/
 USE cd;
-SELECT monthname(starttime) as месяц, count(slots) from bookings
+SELECT monthname(starttime) as месяц, SUM(slots) from bookings
 group by месяц;
